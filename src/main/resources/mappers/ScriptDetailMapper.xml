@@ -29,13 +29,7 @@
                 SUM(CASE
                         WHEN transaction_type = 'BUY' THEN quantity ELSE 0 END) - SUM(CASE WHEN transaction_type = 'SELL'
                         THEN quantity ELSE 0 END) AS current_quantity,
-                CASE
-                    WHEN SUM(CASE
-                                WHEN transaction_type = 'BUY' THEN quantity ELSE 0 END) - SUM(CASE WHEN transaction_type = 'SELL'
-                                THEN quantity ELSE 0 END) = 0
-                    THEN SUM(sell_amount) - SUM(buy_amount)
-                    ELSE SUM(buy_amount) - SUM(sell_amount)
-                END AS current_investment
+                SUM(buy_amount) - SUM(sell_amount) AS current_investment
             FROM Transactions
             GROUP BY symbol
         ),
@@ -48,6 +42,13 @@
                     ELSE 0
                 END AS price_per_share
             FROM Aggregated
+        ),
+        Script AS (
+            SELECT
+                symbol,
+                ltp,
+                target
+            FROM scripts
         )
         SELECT
             a.symbol as symbol,
@@ -57,9 +58,12 @@
             a.total_sell as totalSell,
             a.current_quantity as currentQuantity,
             a.current_investment as currentInvestment,
-            COALESCE(p.price_per_share, 0) AS pricePerShare
+            COALESCE(p.price_per_share, 0) AS pricePerShare,
+            s.ltp AS ltp,
+            s.target AS target
         FROM Aggregated a
         LEFT JOIN PricePerShare p ON a.symbol = p.symbol
+        INNER JOIN Script s ON s.symbol = a.symbol
         ORDER BY a.symbol;
     </select>
 </mapper>

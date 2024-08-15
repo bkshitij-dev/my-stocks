@@ -34,4 +34,7 @@ public class Script {
 
     @Column(name = "ltp")
     private BigDecimal ltp;
+
+    @Column(name = "target")
+    private BigDecimal target;
 }

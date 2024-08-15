@@ -21,4 +21,6 @@ public class ScriptDetailResponseDto {
     private Integer currentQuantity;
     private BigDecimal currentInvestment;
     private BigDecimal pricePerShare;
+    private BigDecimal ltp;
+    private BigDecimal target;
 }
