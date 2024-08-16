@@ -11,16 +11,15 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ScriptDetailResponseDto {
+public class StockHoldingResponseDto {
 
+    private Long id;
     private String scrip;
     private Integer totalBuyQuantity;
     private Integer totalSellQuantity;
-    private BigDecimal totalBuy;
-    private BigDecimal totalSell;
-    private Integer currentQuantity;
+    private BigDecimal totalBuyAmount;
+    private BigDecimal totalSellAmount;
+    private Integer holdingQuantity;
     private BigDecimal currentInvestment;
     private BigDecimal wacc;
-    private BigDecimal ltp;
-    private BigDecimal target;
 }

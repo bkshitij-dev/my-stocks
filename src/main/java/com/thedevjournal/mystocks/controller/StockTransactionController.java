@@ -1,7 +1,6 @@
 package com.thedevjournal.mystocks.controller;
 
 import com.thedevjournal.mystocks.dto.request.StockTransactionRequestDto;
-import com.thedevjournal.mystocks.dto.response.ScriptDetailResponseDto;
 import com.thedevjournal.mystocks.dto.response.StockTransactionResponseDto;
 import com.thedevjournal.mystocks.model.StockTransaction;
 import com.thedevjournal.mystocks.service.StockTransactionService;
@@ -33,11 +32,6 @@ public class StockTransactionController {
             response.add(prepare(stockTransaction));
         });
         return response;
-    }
-
-    @GetMapping("/stocks")
-    public List<ScriptDetailResponseDto> groupByScrip() {
-        return stockTransactionService.groupByScrip();
     }
 
     @GetMapping("/stocks/{scrip}")

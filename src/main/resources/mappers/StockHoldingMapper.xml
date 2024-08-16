@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thedevjournal.mystocks.mapper.StockHoldingMapper">
+    <select id="list" resultType="com.thedevjournal.mystocks.dto.response.StockHoldingResponseDto">
+        SELECT
+        sh.id as id,
+        c.scrip as scrip,
+        sh.total_buy_quantity as totalBuyQuantity,
+        sh.total_sell_quantity as totalSellQuantity,
+        sh.total_buy_amount as totalBuyAmount,
+        sh.total_sell_amount as totalSellAmount,
+        sh.holding_quantity as holdingQuantity,
+        sh.current_investment as currentInvestment,
+        CASE WHEN sh.holding_quantity = 0 THEN 0 ELSE sh.wacc END AS wacc
+        FROM stock_holdings sh
+        INNER JOIN companies c on sh.company_id = c.id
+        ORDER BY c.scrip;
+    </select>
+</mapper>

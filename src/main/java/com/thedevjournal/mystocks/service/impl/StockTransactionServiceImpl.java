@@ -1,15 +1,15 @@
 package com.thedevjournal.mystocks.service.impl;
 
 import com.thedevjournal.mystocks.dto.request.StockTransactionRequestDto;
-import com.thedevjournal.mystocks.dto.response.ScriptDetailResponseDto;
 import com.thedevjournal.mystocks.enums.StockType;
 import com.thedevjournal.mystocks.enums.TransactionType;
-import com.thedevjournal.mystocks.mapper.ScriptDetailMapper;
 import com.thedevjournal.mystocks.model.Company;
 import com.thedevjournal.mystocks.model.StockTransaction;
 import com.thedevjournal.mystocks.repository.StockTransactionRepository;
 import com.thedevjournal.mystocks.service.CompanyService;
+import com.thedevjournal.mystocks.service.StockHoldingService;
 import com.thedevjournal.mystocks.service.StockTransactionService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +22,10 @@ public class StockTransactionServiceImpl implements StockTransactionService {
 
     private final CompanyService companyService;
     private final StockTransactionRepository stockTransactionRepository;
-    private final ScriptDetailMapper scriptDetailMapper;
+    private final StockHoldingService stockHoldingService;
 
     @Override
+    @Transactional
     public void create(StockTransactionRequestDto request) {
         Company company = companyService.get(request.getScrip());
         StockTransaction stockTransaction = StockTransaction.builder()
@@ -35,16 +36,12 @@ public class StockTransactionServiceImpl implements StockTransactionService {
                 .rate(request.getRate())
                 .build();
         stockTransactionRepository.save(stockTransaction);
+        stockHoldingService.updateOnStockTransaction(request.getScrip());
     }
 
     @Override
     public List<StockTransaction> list() {
         return stockTransactionRepository.findAll();
-    }
-
-    @Override
-    public List<ScriptDetailResponseDto> groupByScrip(){
-        return scriptDetailMapper.groupByScrip();
     }
 
     @Override
