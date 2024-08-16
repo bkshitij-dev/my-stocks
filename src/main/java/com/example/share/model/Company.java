@@ -14,19 +14,19 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "scripts", uniqueConstraints = @UniqueConstraint(name = "uk_script_symbol", columnNames = {"symbol"}))
-public class Script {
+@Table(name = "companies", uniqueConstraints = @UniqueConstraint(name = "uk_company_scrip", columnNames = {"scrip"}))
+public class Company {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "script_seq")
-    @SequenceGenerator(name = "script_seq", sequenceName = "script_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "company_seq")
+    @SequenceGenerator(name = "company_seq", sequenceName = "company_seq", allocationSize = 1)
     private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "symbol", nullable = false)
-    private String symbol;
+    @Column(name = "scrip", nullable = false)
+    private String scrip;
 
     @Column(name = "sector", nullable = false)
     @Enumerated(value = EnumType.STRING)

@@ -11,12 +11,12 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ScriptTransactionResponseDto {
+public class StockTransactionResponseDto {
 
     private Long id;
-    private String scriptSymbol;
+    private String scrip;
     private String transactionType;
-    private String shareType;
+    private String stockType;
     private Integer quantity;
     private BigDecimal rate;
     private BigDecimal amount;

@@ -8,5 +8,5 @@ import java.util.List;
 @Mapper
 public interface ScriptDetailMapper {
 
-    List<ScriptDetailResponseDto> groupByScript();
+    List<ScriptDetailResponseDto> groupByScrip();
 }

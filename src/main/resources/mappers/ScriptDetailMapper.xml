@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.share.mapper.ScriptDetailMapper">
-    <select id="groupByScript" resultType="com.example.share.dto.response.ScriptDetailResponseDto">
+    <select id="groupByScrip" resultType="com.example.share.dto.response.ScriptDetailResponseDto">
         WITH Transactions AS (
-            SELECT s.symbol as symbol,
+            SELECT c.scrip as scrip,
                 st.transaction_type as transaction_type,
-                st.share_type as share_type,
+                st.stock_type as stock_type,
                 st.quantity as quantity,
                 st.rate as rate,
             CASE
@@ -16,12 +16,12 @@
                 WHEN st.transaction_type = 'SELL' THEN st.quantity * st.rate
                     ELSE 0
                 END AS sell_amount
-            FROM script_transactions st
-            INNER JOIN scripts s on st.script_id = s.id
+            FROM stock_transactions st
+            INNER JOIN companies c on st.company_id = c.id
         ),
         Aggregated AS (
             SELECT
-                symbol,
+                scrip,
                 SUM(CASE WHEN transaction_type = 'BUY' THEN quantity ELSE 0 END) AS total_buy_quantity,
                 SUM(CASE WHEN transaction_type = 'SELL' THEN quantity ELSE 0 END) AS total_sell_quantity,
                 SUM(buy_amount) AS total_buy,
@@ -31,39 +31,39 @@
                         THEN quantity ELSE 0 END) AS current_quantity,
                 SUM(buy_amount) - SUM(sell_amount) AS current_investment
             FROM Transactions
-            GROUP BY symbol
+            GROUP BY scrip
         ),
-        PricePerShare AS (
+        Wacc AS (
             SELECT
-                symbol,
+                scrip,
                 CASE
                     WHEN current_quantity > 0 THEN
                         CEIL((current_investment / current_quantity) * 100) / 100
                     ELSE 0
-                END AS price_per_share
+                END AS wacc
             FROM Aggregated
         ),
         Script AS (
             SELECT
-                symbol,
+                scrip,
                 ltp,
                 target
-            FROM scripts
+            FROM companies
         )
         SELECT
-            a.symbol as symbol,
+            a.scrip as scrip,
             a.total_buy_quantity as totalBuyQuantity,
             a.total_sell_quantity as totalSellQuantity,
             a.total_buy as totalBuy,
             a.total_sell as totalSell,
             a.current_quantity as currentQuantity,
             a.current_investment as currentInvestment,
-            COALESCE(p.price_per_share, 0) AS pricePerShare,
-            s.ltp AS ltp,
-            s.target AS target
+            COALESCE(w.wacc, 0) AS wacc,
+            c.ltp AS ltp,
+            c.target AS target
         FROM Aggregated a
-        LEFT JOIN PricePerShare p ON a.symbol = p.symbol
-        INNER JOIN Script s ON s.symbol = a.symbol
-        ORDER BY a.symbol;
+        LEFT JOIN Wacc w ON a.scrip = w.scrip
+        INNER JOIN companies c ON c.scrip = a.scrip
+        ORDER BY a.scrip;
     </select>
 </mapper>

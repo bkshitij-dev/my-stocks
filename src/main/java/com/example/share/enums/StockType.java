@@ -1,6 +1,6 @@
 package com.example.share.enums;
 
-public enum ShareType {
+public enum StockType {
 
     IPO,
     SECONDARY,

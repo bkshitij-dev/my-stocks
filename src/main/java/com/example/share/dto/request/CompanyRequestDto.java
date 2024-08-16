@@ -1,7 +1,6 @@
-package com.example.share.dto.response;
+package com.example.share.dto.request;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,12 +9,10 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class ScriptResponseDto {
+public class CompanyRequestDto {
 
-    private Long id;
     private String name;
-    private String symbol;
+    private String scrip;
     private String sector;
     private BigDecimal ltp;
 }

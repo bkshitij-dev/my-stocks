@@ -1,11 +1,11 @@
 package com.example.share.repository;
 
-import com.example.share.model.Script;
+import com.example.share.model.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ScriptRepository extends JpaRepository<Script, Long> {
+public interface CompanyRepository extends JpaRepository<Company, Long> {
 
-    Script findBySymbol(String symbol);
+    Company findByScrip(String scrip);
 }

@@ -13,14 +13,14 @@ import java.math.BigDecimal;
 @Builder
 public class ScriptDetailResponseDto {
 
-    private String symbol;
+    private String scrip;
     private Integer totalBuyQuantity;
     private Integer totalSellQuantity;
     private BigDecimal totalBuy;
     private BigDecimal totalSell;
     private Integer currentQuantity;
     private BigDecimal currentInvestment;
-    private BigDecimal pricePerShare;
+    private BigDecimal wacc;
     private BigDecimal ltp;
     private BigDecimal target;
 }

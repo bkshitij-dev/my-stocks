@@ -1,6 +1,6 @@
 package com.example.share.model;
 
-import com.example.share.enums.ShareType;
+import com.example.share.enums.StockType;
 import com.example.share.enums.TransactionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,25 +15,25 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "script_transactions")
-public class ScriptTransaction {
+@Table(name = "stock_transactions")
+public class StockTransaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "script_transaction_seq")
-    @SequenceGenerator(name = "script_transaction_seq", sequenceName = "script_transaction_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_transaction_seq")
+    @SequenceGenerator(name = "stock_transaction_seq", sequenceName = "stock_transaction_seq", allocationSize = 1)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "script_id", nullable = false)
-    private Script script;
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
 
     @Column(name = "transaction_type", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private TransactionType transactionType;
 
-    @Column(name = "share_type", nullable = false)
+    @Column(name = "stock_type", nullable = false)
     @Enumerated(value = EnumType.STRING)
-    private ShareType shareType;
+    private StockType stockType;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
