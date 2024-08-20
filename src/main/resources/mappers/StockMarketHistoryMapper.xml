@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thedevjournal.mystocks.mapper.StockMarketHistoryMapper">
+    <select id = "updateLiveData"
+            parameterType="com.thedevjournal.mystocks.dto.request.StockMarketHistoryRequestDto"
+            resultType="java.lang.Long">
+        WITH upsert AS (
+            INSERT INTO stock_market_history (id, date, time, index, percentage_change)
+                VALUES (nextval('stock_market_history_seq'), #{request.date}, #{request.time}, #{request.index}, #{request.percentageChange})
+            ON CONFLICT (date)
+            DO UPDATE SET
+                time = EXCLUDED.time,
+                index = EXCLUDED.index,
+                percentage_change = EXCLUDED.percentage_change
+            RETURNING id
+        )
+        SELECT id FROM upsert;
+    </select>
+</mapper>

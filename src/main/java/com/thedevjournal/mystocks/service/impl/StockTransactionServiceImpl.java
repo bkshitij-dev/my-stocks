@@ -6,7 +6,6 @@ import com.thedevjournal.mystocks.enums.TransactionType;
 import com.thedevjournal.mystocks.model.Company;
 import com.thedevjournal.mystocks.model.StockTransaction;
 import com.thedevjournal.mystocks.repository.StockTransactionRepository;
-import com.thedevjournal.mystocks.service.CompanyService;
 import com.thedevjournal.mystocks.service.StockHoldingService;
 import com.thedevjournal.mystocks.service.StockTransactionService;
 import jakarta.transaction.Transactional;
@@ -14,29 +13,26 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class StockTransactionServiceImpl implements StockTransactionService {
 
-    private final CompanyService companyService;
     private final StockTransactionRepository stockTransactionRepository;
     private final StockHoldingService stockHoldingService;
 
     @Override
     @Transactional
     public void create(StockTransactionRequestDto request) {
-        Company company = companyService.get(request.getScrip());
         StockTransaction stockTransaction = StockTransaction.builder()
-                .company(company)
+                .company(Company.builder().id(request.getCompanyId()).build())
                 .transactionType(TransactionType.valueOf(request.getTransactionType()))
                 .stockType(StockType.valueOf(request.getStockType()))
                 .quantity(request.getQuantity())
                 .rate(request.getRate())
                 .build();
         stockTransactionRepository.save(stockTransaction);
-        stockHoldingService.updateOnStockTransaction(request.getScrip());
+        stockHoldingService.updateOnStockTransaction(request.getCompanyId());
     }
 
     @Override
@@ -51,16 +47,15 @@ public class StockTransactionServiceImpl implements StockTransactionService {
 
     @Override
     public StockTransaction get(Long id) throws Exception {
-        return Optional.of(stockTransactionRepository.findById(id)).get()
+        return stockTransactionRepository.findById(id)
                 .orElseThrow(() -> new Exception("Cannot find transaction"));
     }
 
     @Override
     public void update(Long id, StockTransactionRequestDto request) {
-        Company company = companyService.get(request.getScrip());
         StockTransaction stockTransaction = StockTransaction.builder()
                 .id(id)
-                .company(company)
+                .company(Company.builder().id(request.getCompanyId()).build())
                 .transactionType(TransactionType.valueOf(request.getTransactionType()))
                 .stockType(StockType.valueOf(request.getStockType()))
                 .quantity(request.getQuantity())

@@ -24,7 +24,7 @@ public class StockTransaction {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "company_id", nullable = false)
+    @JoinColumn(name = "company_id", nullable = false, foreignKey = @ForeignKey(name = "fk_stocktransaction_company"))
     private Company company;
 
     @Column(name = "transaction_type", nullable = false)

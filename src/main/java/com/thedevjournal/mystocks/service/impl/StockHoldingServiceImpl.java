@@ -17,8 +17,8 @@ public class StockHoldingServiceImpl implements StockHoldingService {
     private final StockHoldingMapper stockHoldingMapper;
 
     @Override
-    public void updateOnStockTransaction(String scrip) {
-        stockHoldingRepository.updateOnStockTransaction(scrip);
+    public void updateOnStockTransaction(Long companyId) {
+        stockHoldingRepository.updateOnStockTransaction(companyId);
     }
 
     @Override

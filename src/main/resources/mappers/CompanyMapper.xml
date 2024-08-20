@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thedevjournal.mystocks.mapper.CompanyMapper">
+    <select id="list" resultType="com.thedevjournal.mystocks.dto.response.CompanyResponseDto">
+        SELECT
+        c.id as id,
+        c.name as name,
+        c.scrip as scrip,
+        s.name as sector
+        FROM companies c
+        INNER JOIN sectors s ON c.sector_id = s.id
+    </select>
+
+    <select id="getByScrip" resultType="com.thedevjournal.mystocks.dto.response.CompanyResponseDto">
+        SELECT
+        c.id as id,
+        c.name as name,
+        c.scrip as scrip,
+        s.name as sector
+        FROM companies c
+        INNER JOIN sectors s ON c.sector_id = s.id
+        WHERE c.scrip = #{scrip}
+    </select>
+
+    <update id = "update">
+        UPDATE companies
+        SET name = #{request.name},
+            scrip = #{request.scrip},
+            sector_id = #{request.sector_id}
+        WHERE id = #{id}
+    </update>
+</mapper>

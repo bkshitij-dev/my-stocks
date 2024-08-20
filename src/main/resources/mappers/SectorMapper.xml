@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thedevjournal.mystocks.mapper.SectorMapper">
+    <select id="list" resultType="com.thedevjournal.mystocks.dto.response.SectorResponseDto">
+        SELECT
+            s.id as id,
+            s.name as name
+        FROM sectors s
+    </select>
+
+    <select id="get" resultType="com.thedevjournal.mystocks.dto.response.SectorResponseDto">
+        SELECT
+            s.id as id,
+            s.name as name
+        FROM sectors s
+        WHERE s.id = #{id}
+    </select>
+
+    <update id = "update">
+        UPDATE sectors
+            SET name = #{request.name}
+        WHERE id = #{id}
+    </update>
+</mapper>

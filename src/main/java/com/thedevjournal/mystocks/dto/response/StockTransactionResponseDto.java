@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 public class StockTransactionResponseDto {
 
     private Long id;
+    private Long companyId;
     private String scrip;
     private String transactionType;
     private String stockType;

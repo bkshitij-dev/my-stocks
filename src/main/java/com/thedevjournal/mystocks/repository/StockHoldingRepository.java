@@ -28,7 +28,7 @@ public interface StockHoldingRepository extends JpaRepository<StockHolding, Long
             "        END AS sell_amount\n" +
             "    FROM stock_transactions st\n" +
             "    INNER JOIN companies c ON st.company_id = c.id\n" +
-            "    WHERE c.scrip = ?1\n" +
+            "    WHERE c.id = ?1\n" +
             "),\n" +
             "Aggregated AS (\n" +
             "    SELECT\n" +
@@ -60,7 +60,7 @@ public interface StockHoldingRepository extends JpaRepository<StockHolding, Long
             "        ltp,\n" +
             "        target\n" +
             "    FROM companies\n" +
-            "    WHERE scrip = ?1\n" +
+            "    WHERE id = ?1\n" +
             ")\n" +
             "INSERT INTO stock_holdings (\n" +
             "    id,\n" +
@@ -95,5 +95,5 @@ public interface StockHoldingRepository extends JpaRepository<StockHolding, Long
             "    holding_quantity = EXCLUDED.holding_quantity,\n" +
             "    current_investment = EXCLUDED.current_investment,\n" +
             "    wacc = EXCLUDED.wacc;\n", nativeQuery = true)
-    void updateOnStockTransaction(String scrip);
+    void updateOnStockTransaction(Long companyId);
 }

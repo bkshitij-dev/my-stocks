@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class StockTransactionRequestDto {
 
-    private String scrip;
+    private Long companyId;
     private String transactionType;
     private String stockType;
     private Integer quantity;

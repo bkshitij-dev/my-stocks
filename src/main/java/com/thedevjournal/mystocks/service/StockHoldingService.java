@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface StockHoldingService {
 
-    void updateOnStockTransaction(String scrip);
+    void updateOnStockTransaction(Long companyId);
 
     List<StockHoldingResponseDto> list();
 }

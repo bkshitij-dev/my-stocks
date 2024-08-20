@@ -1,6 +1,5 @@
 package com.thedevjournal.mystocks.model;
 
-import com.thedevjournal.mystocks.enums.Sector;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,8 +27,8 @@ public class Company {
     @Column(name = "scrip", nullable = false)
     private String scrip;
 
-    @Column(name = "sector", nullable = false)
-    @Enumerated(value = EnumType.STRING)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "sector_id", nullable = false, foreignKey = @ForeignKey(name = "fk_company_sector"))
     private Sector sector;
 
     @Column(name = "ltp")
