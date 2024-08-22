@@ -9,6 +9,7 @@
         s.name as sector
         FROM companies c
         INNER JOIN sectors s ON c.sector_id = s.id
+        ORDER BY c.name
     </select>
 
     <select id="getByScrip" resultType="com.thedevjournal.mystocks.dto.response.CompanyResponseDto">

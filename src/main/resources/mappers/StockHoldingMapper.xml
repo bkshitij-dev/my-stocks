@@ -11,7 +11,9 @@
         sh.total_sell_amount as totalSellAmount,
         sh.holding_quantity as holdingQuantity,
         sh.current_investment as currentInvestment,
-        CASE WHEN sh.holding_quantity = 0 THEN 0 ELSE sh.wacc END AS wacc
+        CASE WHEN sh.holding_quantity = 0 THEN 0
+            WHEN sh.total_sell_amount - sh.total_buy_amount > 0 THEN 0
+            ELSE sh.wacc END AS wacc
         FROM stock_holdings sh
         INNER JOIN companies c on sh.company_id = c.id
         ORDER BY c.scrip;
