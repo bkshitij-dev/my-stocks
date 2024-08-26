@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thedevjournal.mystocks.mapper.StockMarketHistoryMapper">
+
+    <resultMap id="stockMarketHistoryResponse"
+               type="com.thedevjournal.mystocks.dto.response.StockMarketHistoryResponseDto">
+        <result property="date" column="date"/>
+        <result property="time" column="time"/>
+        <result property="index" column="index"/>
+        <result property="percentageChange" column="percentageChange"/>
+        <collection property="stocks" javaType="List" columnPrefix="s_"
+                    ofType="com.thedevjournal.mystocks.dto.response.StockHistoryResponseDto">
+            <result property="scrip" column="scrip"/>
+            <result property="ltp" column="ltp"/>
+            <result property="pointsChange" column="pointsChange"/>
+            <result property="percentageChange" column="percentageChange"/>
+            <result property="open" column="open"/>
+            <result property="high" column="high"/>
+            <result property="low" column="low"/>
+        </collection>
+    </resultMap>
+
     <select id = "updateLiveData"
             parameterType="com.thedevjournal.mystocks.dto.request.StockMarketHistoryRequestDto"
             resultType="java.lang.Long">
@@ -16,4 +35,24 @@
         )
         SELECT id FROM upsert;
     </select>
+
+    <select id="getCurrentData" resultMap="stockMarketHistoryResponse">
+        SELECT
+            smh.date as date,
+            smh.time as time,
+            smh.index as index,
+            smh.percentage_change as percentageChange,
+            c.scrip as s_scrip,
+            sh.ltp as s_ltp,
+            sh.points_change as s_pointsChange,
+            sh.percentage_change as s_percentageChange,
+            sh.open as s_open,
+            sh.high as s_high,
+            sh.low as s_low
+        FROM stock_market_history smh
+        INNER JOIN stock_history sh ON sh.stock_market_history_id = smh.id
+        INNER JOIN companies c on sh.company_id = c.id
+        WHERE smh.date = (SELECT max(smh1.date) FROM stock_market_history smh1);
+    </select>
+
 </mapper>

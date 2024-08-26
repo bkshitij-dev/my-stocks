@@ -1,6 +1,7 @@
 package com.thedevjournal.mystocks.service;
 
 import com.thedevjournal.mystocks.dto.request.StockMarketHistoryRequestDto;
+import com.thedevjournal.mystocks.dto.response.StockMarketHistoryResponseDto;
 
 /*
  * @author Kshitij
@@ -9,4 +10,6 @@ import com.thedevjournal.mystocks.dto.request.StockMarketHistoryRequestDto;
 public interface StockMarketHistoryService {
 
     Long create(StockMarketHistoryRequestDto request);
+
+    StockMarketHistoryResponseDto getCurrentData();
 }
