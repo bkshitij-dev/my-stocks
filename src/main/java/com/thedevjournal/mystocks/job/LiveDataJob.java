@@ -7,22 +7,27 @@ package com.thedevjournal.mystocks.job;
 
 import com.thedevjournal.mystocks.service.StockHistoryService;
 import lombok.RequiredArgsConstructor;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class LiveDataJob {
+public class LiveDataJob implements Job {
 
     private final StockHistoryService stockHistoryService;
     private static final Logger logger = LoggerFactory.getLogger(LiveDataJob.class);
 
-    @Scheduled(cron = "0 */2 * ? * *")
-    public void fetchLiveData() throws Exception {
+    @Override
+    public void execute(JobExecutionContext context) {
         logger.info("Fetching live data >>>>>>");
-        stockHistoryService.fetchLiveData();
+        try {
+            stockHistoryService.fetchLiveData();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         logger.info("<<<<<< Successfully fetched live data and updated stock history");
     }
 }
