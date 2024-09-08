@@ -22,7 +22,7 @@ public class StockHoldingServiceImpl implements StockHoldingService {
     }
 
     @Override
-    public List<StockHoldingResponseDto> list() {
+    public List<StockHoldingResponseDto> list () {
         return stockHoldingMapper.list();
     }
 }
