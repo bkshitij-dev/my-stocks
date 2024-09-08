@@ -1,51 +1,58 @@
 package com.thedevjournal.mystocks.controller;
 
+import com.thedevjournal.mystocks.constant.AppConstants;
 import com.thedevjournal.mystocks.dto.request.CompanyRequestDto;
-import com.thedevjournal.mystocks.dto.response.CompanyResponseDto;
-import com.thedevjournal.mystocks.model.Company;
+import com.thedevjournal.mystocks.dto.response.ApiResponse;
 import com.thedevjournal.mystocks.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/companies")
 @RequiredArgsConstructor
-public class CompanyController {
+public class CompanyController extends BaseController {
 
     private final CompanyService companyService;
 
     @PostMapping
-    public String create(@RequestBody CompanyRequestDto request) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse> create(@RequestBody CompanyRequestDto request) {
         companyService.create(request);
-        return "SUCCESS";
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_SAVE), HttpStatus.OK);
     }
 
     @GetMapping
-    public List<CompanyResponseDto> list() {
-        return companyService.list();
+    public ResponseEntity<ApiResponse> list() {
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE, companyService.list()),
+                HttpStatus.OK);
     }
 
     @GetMapping("/{scrip}")
-    public CompanyResponseDto getByScrip(@PathVariable("scrip") String scrip) {
-        return companyService.getByScrip(scrip);
+    public ResponseEntity<ApiResponse> getByScrip(@PathVariable("scrip") String scrip) {
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE, companyService.getByScrip(scrip)),
+                HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public String update(@PathVariable("id") Long id, @RequestBody CompanyRequestDto request) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse> update(@PathVariable("id") Long id, @RequestBody CompanyRequestDto request) {
         companyService.update(id, request);
-        return "SUCCESS";
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_UPDATE), HttpStatus.OK);
     }
 
     @GetMapping("/fetch")
-    public String fetch() throws IOException {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse> fetch() throws IOException {
         String url = "https://merolagani.com/CompanyList.aspx";
         Document document = Jsoup.connect(url).get();
         Elements elements = document.getElementsByClass("panel panel-default");
@@ -65,6 +72,6 @@ public class CompanyController {
                 companyService.create(request);
             }
         }
-        return "SUCCESS";
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE), HttpStatus.OK);
     }
 }

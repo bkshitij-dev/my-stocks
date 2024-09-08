@@ -5,40 +5,46 @@ package com.thedevjournal.mystocks.controller;
  * @created 19-Aug-2024
  */
 
+import com.thedevjournal.mystocks.constant.AppConstants;
 import com.thedevjournal.mystocks.dto.request.SectorRequestDto;
-import com.thedevjournal.mystocks.dto.response.SectorResponseDto;
+import com.thedevjournal.mystocks.dto.response.ApiResponse;
 import com.thedevjournal.mystocks.service.SectorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/sectors")
 @RequiredArgsConstructor
-public class SectorController {
+public class SectorController extends BaseController {
 
     private final SectorService sectorService;
 
     @PostMapping
-    public String create(@RequestBody SectorRequestDto request) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse> create(@RequestBody SectorRequestDto request) {
         sectorService.create(request);
-        return "SUCCESS";
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_SAVE), HttpStatus.OK);
     }
 
     @GetMapping
-    public List<SectorResponseDto> list() {
-        return sectorService.list();
+    public ResponseEntity<ApiResponse> list() {
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE, sectorService.list()),
+                HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public SectorResponseDto get(@PathVariable("id") Long id) {
-        return sectorService.get(id);
+    public ResponseEntity<ApiResponse> get(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE, sectorService.get(id)),
+                HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public String update(@PathVariable("id") Long id, @RequestBody SectorRequestDto request) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse> update(@PathVariable("id") Long id, @RequestBody SectorRequestDto request) {
         sectorService.update(id, request);
-        return "SUCCESS";
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_UPDATE), HttpStatus.OK);
     }
 }

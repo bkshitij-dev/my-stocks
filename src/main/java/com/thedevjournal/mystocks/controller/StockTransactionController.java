@@ -1,10 +1,15 @@
 package com.thedevjournal.mystocks.controller;
 
+import com.thedevjournal.mystocks.constant.AppConstants;
 import com.thedevjournal.mystocks.dto.request.StockTransactionRequestDto;
+import com.thedevjournal.mystocks.dto.response.ApiResponse;
 import com.thedevjournal.mystocks.dto.response.StockTransactionResponseDto;
 import com.thedevjournal.mystocks.model.StockTransaction;
 import com.thedevjournal.mystocks.service.StockTransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -14,46 +19,48 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/stock-transactions")
 @RequiredArgsConstructor
-public class StockTransactionController {
+@PreAuthorize(("hasRole('USER')"))
+public class StockTransactionController extends BaseController {
 
     private final StockTransactionService stockTransactionService;
 
     @PostMapping
-    public String create(@RequestBody StockTransactionRequestDto request) {
+    public ResponseEntity<ApiResponse> create(@RequestBody StockTransactionRequestDto request) {
         stockTransactionService.create(request);
-        return "SUCCESS";
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_SAVE), HttpStatus.OK);
     }
 
     @GetMapping
-    public List<StockTransactionResponseDto> list() {
+    public ResponseEntity<ApiResponse> list() {
         List<StockTransactionResponseDto> response = new ArrayList<>();
         List<StockTransaction> stockTransactions = stockTransactionService.list();
         stockTransactions.forEach(stockTransaction -> {
             response.add(prepare(stockTransaction));
         });
-        return response;
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE, response), HttpStatus.OK);
     }
 
     @GetMapping("/stocks/{scrip}")
-    public List<StockTransactionResponseDto> listByScrip(@PathVariable("scrip") String scrip) {
+    public ResponseEntity<ApiResponse> listByScrip(@PathVariable("scrip") String scrip) {
         List<StockTransactionResponseDto> response = new ArrayList<>();
         List<StockTransaction> stockTransactions = stockTransactionService.listByScrip(scrip);
         stockTransactions.forEach(stockTransaction -> {
             response.add(prepare(stockTransaction));
         });
-        return response;
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE, response), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public StockTransactionResponseDto get(@PathVariable("id") Long id) throws Exception {
+    public ResponseEntity<ApiResponse> get(@PathVariable("id") Long id) throws Exception {
         StockTransaction stockTransaction = stockTransactionService.get(id);
-        return prepare(stockTransaction);
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE, prepare(stockTransaction)),
+                HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public String update(@PathVariable("id") Long id, @RequestBody StockTransactionRequestDto request) {
+    public ResponseEntity<ApiResponse> update(@PathVariable("id") Long id, @RequestBody StockTransactionRequestDto request) {
         stockTransactionService.update(id, request);
-        return "SUCCESS";
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE), HttpStatus.OK);
     }
 
     private StockTransactionResponseDto prepare(StockTransaction stockTransaction) {
