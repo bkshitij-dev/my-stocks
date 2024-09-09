@@ -7,6 +7,7 @@
         <result property="date" column="date"/>
         <result property="time" column="time"/>
         <result property="index" column="index"/>
+        <result property="pointsChange" column="pointsChange"/>
         <result property="percentageChange" column="percentageChange"/>
         <collection property="stocks" javaType="List" columnPrefix="s_"
                     ofType="com.thedevjournal.mystocks.dto.response.StockHistoryResponseDto">
@@ -37,23 +38,45 @@
     </select>
 
     <select id="getCurrentData" resultMap="stockMarketHistoryResponse">
-        SELECT
-            smh.date as date,
-            smh.time as time,
-            smh.index as index,
-            smh.percentage_change as percentageChange,
-            c.scrip as s_scrip,
-            sh.ltp as s_ltp,
-            sh.points_change as s_pointsChange,
-            sh.percentage_change as s_percentageChange,
-            sh.open as s_open,
-            sh.high as s_high,
-            sh.low as s_low
+        WITH previous_data AS (
+            SELECT smho.index as previous_index
+            FROM stock_market_history smho
+            WHERE smho.date = (select max(date)-1 as previous_date from stock_market_history)
+        ),
+        present_data AS (
+            SELECT
+                smh.date as date,
+                smh.time as time,
+                smh.index as index,
+                smh.percentage_change as percentageChange,
+                c.scrip as s_scrip,
+                sh.ltp as s_ltp,
+                sh.points_change as s_pointsChange,
+                sh.percentage_change as s_percentageChange,
+                sh.open as s_open,
+                sh.high as s_high,
+                sh.low as s_low
         FROM stock_market_history smh
         INNER JOIN stock_history sh ON sh.stock_market_history_id = smh.id
         INNER JOIN companies c on sh.company_id = c.id
         WHERE smh.date = (SELECT max(smh1.date) FROM stock_market_history smh1)
-        ORDER BY c.scrip;
+        )
+        SELECT
+            date,
+            time,
+            index,
+            (index - pd.previous_index) as pointsChange,
+            percentageChange,
+            s_scrip,
+            s_ltp,
+            s_pointsChange,
+            s_percentageChange,
+            s_open,
+            s_high,
+            s_low
+        FROM present_data
+        CROSS JOIN previous_data pd
+        ORDER BY s_scrip;
     </select>
 
 </mapper>

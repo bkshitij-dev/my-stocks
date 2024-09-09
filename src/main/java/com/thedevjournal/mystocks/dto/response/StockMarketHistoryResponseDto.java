@@ -22,6 +22,7 @@ public class StockMarketHistoryResponseDto {
     private String date;
     private String time;
     private BigDecimal index;
+    private BigDecimal pointsChange;
     private BigDecimal percentageChange;
     private List<StockHistoryResponseDto> stocks;
 }
