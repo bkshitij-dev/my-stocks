@@ -52,7 +52,8 @@
         FROM stock_market_history smh
         INNER JOIN stock_history sh ON sh.stock_market_history_id = smh.id
         INNER JOIN companies c on sh.company_id = c.id
-        WHERE smh.date = (SELECT max(smh1.date) FROM stock_market_history smh1);
+        WHERE smh.date = (SELECT max(smh1.date) FROM stock_market_history smh1)
+        ORDER BY c.scrip;
     </select>
 
 </mapper>
