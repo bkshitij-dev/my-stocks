@@ -2,6 +2,7 @@ package com.thedevjournal.mystocks.service.impl;
 
 import com.thedevjournal.mystocks.dto.request.StockHistoryRequestDto;
 import com.thedevjournal.mystocks.dto.request.StockMarketHistoryRequestDto;
+import com.thedevjournal.mystocks.dto.response.RecentMarketDataResponseDto;
 import com.thedevjournal.mystocks.job.LiveDataJob;
 import com.thedevjournal.mystocks.mapper.StockHistoryMapper;
 import com.thedevjournal.mystocks.model.Company;
@@ -19,6 +20,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /*
@@ -96,5 +99,12 @@ public class StockHistoryServiceImpl implements StockHistoryService {
 
     private BigDecimal getValue(Element e) {
         return new BigDecimal(e.text().replace(",","").replace("%", "").trim());
+    }
+
+    @Override
+    public List<RecentMarketDataResponseDto> getRecentData(String scrip) {
+        List<RecentMarketDataResponseDto> recentData = stockHistoryMapper.getRecentData(scrip);
+        Collections.reverse(recentData);
+        return recentData;
     }
 }

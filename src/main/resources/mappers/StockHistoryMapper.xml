@@ -14,4 +14,17 @@
         high = EXCLUDED.high,
         low = EXCLUDED.low;
     </insert>
+
+    <select id="getRecentData" resultType="com.thedevjournal.mystocks.dto.response.RecentMarketDataResponseDto">
+        SELECT
+            to_char(smh.date, 'Mon DD') as date,
+            sh.ltp as ltp,
+            sh.points_change as pointsChange
+        FROM stock_history sh
+        INNER JOIN stock_market_history smh ON sh.stock_market_history_id = smh.id
+        INNER JOIN companies c ON sh.company_id = c.id
+        WHERE c.scrip = #{scrip}
+        ORDER BY date DESC
+        LIMIT 10;
+    </select>
 </mapper>
