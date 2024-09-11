@@ -27,4 +27,10 @@ public class StockMarketHistoryController extends BaseController {
         return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE,
                 stockMarketHistoryService.getCurrentData()), HttpStatus.OK);
     }
+
+    @GetMapping("/recent-data")
+    public ResponseEntity<ApiResponse> getRecentData() {
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE,
+                stockMarketHistoryService.getRecentData()), HttpStatus.OK);
+    }
 }

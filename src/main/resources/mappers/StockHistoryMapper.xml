@@ -18,7 +18,7 @@
     <select id="getRecentData" resultType="com.thedevjournal.mystocks.dto.response.RecentMarketDataResponseDto">
         SELECT
             to_char(smh.date, 'Mon DD') as date,
-            sh.ltp as ltp,
+            sh.ltp as index,
             sh.points_change as pointsChange
         FROM stock_history sh
         INNER JOIN stock_market_history smh ON sh.stock_market_history_id = smh.id

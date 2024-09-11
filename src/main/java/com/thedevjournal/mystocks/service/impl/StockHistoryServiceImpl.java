@@ -3,7 +3,6 @@ package com.thedevjournal.mystocks.service.impl;
 import com.thedevjournal.mystocks.dto.request.StockHistoryRequestDto;
 import com.thedevjournal.mystocks.dto.request.StockMarketHistoryRequestDto;
 import com.thedevjournal.mystocks.dto.response.RecentMarketDataResponseDto;
-import com.thedevjournal.mystocks.job.LiveDataJob;
 import com.thedevjournal.mystocks.mapper.StockHistoryMapper;
 import com.thedevjournal.mystocks.model.Company;
 import com.thedevjournal.mystocks.service.CompanyService;
@@ -37,15 +36,15 @@ public class StockHistoryServiceImpl implements StockHistoryService {
     private final StockMarketHistoryService stockMarketHistoryService;
     private final StockHistoryMapper stockHistoryMapper;
 
-    private static final Logger logger = LoggerFactory.getLogger(LiveDataJob.class);
+    private static final Logger logger = LoggerFactory.getLogger(StockHistoryServiceImpl.class);
 
     @Override
     @Transactional
     public void fetchLiveData() throws Exception {
         String url = "https://www.sharesansar.com/live-trading";
-        logger.info("Fetching data from " + url + ">>>>>>");
+        logger.info("Fetching data from {}>>>>>>", url);
         Document document = Jsoup.connect(url).get();
-        String lastUpdated = document.getElementById("dDate").text();
+        String lastUpdated = Objects.requireNonNull(document.getElementById("dDate")).text();
 
         StockMarketHistoryRequestDto stockMarketHistoryRequestDto = StockMarketHistoryRequestDto.builder()
                 .date(lastUpdated.split("\\s+")[0])
