@@ -1,6 +1,7 @@
 package com.thedevjournal.mystocks.service.impl;
 
 import com.thedevjournal.mystocks.dto.request.StockMarketHistoryRequestDto;
+import com.thedevjournal.mystocks.dto.response.PercentageChangeResponseDto;
 import com.thedevjournal.mystocks.dto.response.RecentMarketDataResponseDto;
 import com.thedevjournal.mystocks.dto.response.StockMarketHistoryResponseDto;
 import com.thedevjournal.mystocks.mapper.StockMarketHistoryMapper;
@@ -45,5 +46,15 @@ public class StockMarketHistoryServiceImpl implements StockMarketHistoryService 
         List<RecentMarketDataResponseDto> recentData = stockMarketHistoryMapper.getRecentData();
         Collections.reverse(recentData);
         return recentData;
+    }
+
+    @Override
+    public List<PercentageChangeResponseDto> getTopGainers() {
+        return stockMarketHistoryMapper.getTopChanges(true);
+    }
+
+    @Override
+    public List<PercentageChangeResponseDto> getTopLosers() {
+        return stockMarketHistoryMapper.getTopChanges(false);
     }
 }

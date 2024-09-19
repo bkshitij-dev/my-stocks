@@ -33,4 +33,16 @@ public class StockMarketHistoryController extends BaseController {
         return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE,
                 stockMarketHistoryService.getRecentData()), HttpStatus.OK);
     }
+
+    @GetMapping("/top-gainers")
+    public ResponseEntity<ApiResponse> getTopGainers() {
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE,
+                stockMarketHistoryService.getTopGainers()), HttpStatus.OK);
+    }
+
+    @GetMapping("/top-losers")
+    public ResponseEntity<ApiResponse> getTopLosers() {
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE,
+                stockMarketHistoryService.getTopLosers()), HttpStatus.OK);
+    }
 }

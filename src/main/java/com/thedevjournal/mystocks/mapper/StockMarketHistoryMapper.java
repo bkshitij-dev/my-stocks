@@ -5,6 +5,7 @@ package com.thedevjournal.mystocks.mapper;
  * @created 20-Aug-2024
  */
 
+import com.thedevjournal.mystocks.dto.response.PercentageChangeResponseDto;
 import com.thedevjournal.mystocks.dto.response.RecentMarketDataResponseDto;
 import com.thedevjournal.mystocks.dto.response.StockMarketHistoryResponseDto;
 import com.thedevjournal.mystocks.model.StockMarketHistory;
@@ -21,4 +22,7 @@ public interface StockMarketHistoryMapper {
     StockMarketHistoryResponseDto getCurrentData();
 
     List<RecentMarketDataResponseDto> getRecentData();
+
+    List<PercentageChangeResponseDto> getTopChanges(@Param("gainers") boolean gainers);
+
 }
