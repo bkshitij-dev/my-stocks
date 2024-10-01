@@ -46,6 +46,9 @@ public class StockHistory {
     @Column(name = "low", nullable = false)
     private BigDecimal low;
 
+    @Column(name = "volume")
+    private BigDecimal volume;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "stock_market_history_id", nullable = false, foreignKey = @ForeignKey(name = "fk_stockhistory_stockmarkethistory"))
     private StockMarketHistory stockMarketHistory;

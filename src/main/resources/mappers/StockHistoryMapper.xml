@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thedevjournal.mystocks.mapper.StockHistoryMapper">
     <insert id="updateLiveData" parameterType="com.thedevjournal.mystocks.dto.request.StockHistoryRequestDto">
-        INSERT INTO stock_history (id, company_id, ltp, points_change, percentage_change, open, high, low, stock_market_history_id)
+        INSERT INTO stock_history (id, company_id, ltp, points_change, percentage_change, open, high, low, volume, stock_market_history_id)
         VALUES (nextval('stock_history_seq'), #{companyId}, #{request.ltp}, #{request.pointsChange}, #{request.percentageChange},
-        #{request.open}, #{request.high}, #{request.low}, #{request.stockMarketHistoryId})
+        #{request.open}, #{request.high}, #{request.low}, #{request.volume}, #{request.stockMarketHistoryId})
         ON CONFLICT (company_id, stock_market_history_id)
         DO UPDATE SET
         ltp = EXCLUDED.ltp,
@@ -12,7 +12,8 @@
         percentage_change = EXCLUDED.percentage_change,
         open = EXCLUDED.open,
         high = EXCLUDED.high,
-        low = EXCLUDED.low;
+        low = EXCLUDED.low,
+        volume = EXCLUDED.volume
     </insert>
 
     <select id="getRecentData" resultType="com.thedevjournal.mystocks.dto.response.RecentMarketDataResponseDto">

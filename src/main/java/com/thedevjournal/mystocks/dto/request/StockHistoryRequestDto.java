@@ -25,5 +25,6 @@ public class StockHistoryRequestDto {
     private BigDecimal open;
     private BigDecimal high;
     private BigDecimal low;
+    private BigDecimal volume;
     private Long stockMarketHistoryId;
 }

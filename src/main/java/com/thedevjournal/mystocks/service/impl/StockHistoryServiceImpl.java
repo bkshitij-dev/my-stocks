@@ -80,6 +80,7 @@ public class StockHistoryServiceImpl implements StockHistoryService {
                         .open(getValue(tdElements.get(5)))
                         .high(getValue(tdElements.get(6)))
                         .low(getValue(tdElements.get(7)))
+                        .volume(getValue(tdElements.get(8)))
                         .stockMarketHistoryId(stockMarketHistoryId)
                         .build();
                 create(stockHistoryDto);
