@@ -93,61 +93,70 @@
         smh.index as index
         FROM stock_market_history smh
         ORDER BY smh.date DESC
-        LIMIT 26;
+        LIMIT 60;
     </select>
 
     <select id="getTopChanges" resultType="com.thedevjournal.mystocks.dto.response.PercentageChangeResponseDto">
-        WITH RecentDates AS (
-        SELECT
-        date
-        FROM
-        stock_market_history
-        ORDER BY
-        date DESC
-        LIMIT 3
-        ),
-        FilteredStockHistory AS (
-        SELECT
-        sh.company_id,
-        c.scrip,
-        smh.date,
-        1 + sh.percentage_change / 100.0 AS growth_factor,
-        sh.percentage_change,
-        RANK() OVER (PARTITION BY sh.company_id ORDER BY smh.date DESC) AS rank_date
-        FROM
-        stock_history sh
-        JOIN
-        companies c ON sh.company_id = c.id
-        JOIN
-        stock_market_history smh ON sh.stock_market_history_id = smh.id
-        WHERE
-        smh.date IN (SELECT date FROM RecentDates)
-        ),
-        GrowthFactors AS (
-        SELECT
-        company_id,
-        scrip,
-        EXP(SUM(LN(growth_factor))) AS cumulative_growth_factor,
-        MAX(CASE WHEN rank_date = 1 THEN percentage_change END) AS latest_date_percentage_change
-        FROM
-        FilteredStockHistory
-        GROUP BY
-        company_id, scrip
-        )
+        <![CDATA[
+            WITH RecentDates AS (
+            SELECT
+            date
+            FROM
+            stock_market_history
+            ORDER BY
+            date DESC
+            LIMIT #{days}
+            ),
+            FilteredStockHistory AS (
+            SELECT
+            sh.company_id,
+            c.scrip,
+            smh.date,
+            1 + sh.percentage_change / 100.0 AS growth_factor,
+            sh.percentage_change,
+            sh.ltp,
+            RANK() OVER (PARTITION BY sh.company_id ORDER BY smh.date DESC) AS rank_date
+            FROM
+            stock_history sh
+            JOIN
+            companies c ON sh.company_id = c.id
+            JOIN
+            stock_market_history smh ON sh.stock_market_history_id = smh.id
+            JOIN sectors s ON c.sector_id = s.id
+            WHERE
+            smh.date IN (SELECT date FROM RecentDates)
+            AND s.name NOT IN ('Mutual Fund', 'Corporate Debentures','Government Bonds', 'Capital')
+            ),
+            GrowthFactors AS (
+            SELECT
+            company_id,
+            scrip,
+            EXP(SUM(LN(growth_factor))) AS cumulative_growth_factor,
+            MAX(CASE WHEN rank_date = 1 THEN percentage_change END) AS latest_date_percentage_change,
+            MAX(CASE WHEN rank_date = 1 THEN ltp END) AS ltp
+            FROM
+            FilteredStockHistory
+            GROUP BY
+            company_id, scrip
+            )
 
-        SELECT
-        company_id,
-        scrip,
-        ROUND((cumulative_growth_factor - 1) * 100, 2) AS totalPercentageChange,
-        ROUND(latest_date_percentage_change, 2) AS latestPercentageChange
-        FROM
-        GrowthFactors
-        ORDER BY
-        totalPercentageChange
-        <if test="gainers">
-            DESC
-        </if>
-        LIMIT 10;
+            SELECT
+            company_id,
+            scrip,
+            ROUND((cumulative_growth_factor - 1) * 100, 2) AS totalPercentageChange,
+            ROUND(latest_date_percentage_change, 2) AS latestPercentageChange,
+            ltp
+            FROM
+            GrowthFactors
+            WHERE
+            (#{gainers} AND ((CASE WHEN #{days} > 1 THEN ROUND((cumulative_growth_factor - 1) * 100, 2) > 0
+                               WHEN #{days} = 1 THEN ROUND(latest_date_percentage_change, 2) > 0 END)))
+            OR
+            (#{gainers} = false AND ((CASE WHEN #{days} > 1 THEN ROUND((cumulative_growth_factor - 1) * 100, 2) < 0
+                               WHEN #{days} = 1 THEN ROUND(latest_date_percentage_change, 2) < 0 END)))
+            ORDER BY
+            totalPercentageChange
+        ]]>
     </select>
 
 </mapper>

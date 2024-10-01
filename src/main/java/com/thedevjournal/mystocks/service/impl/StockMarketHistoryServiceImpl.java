@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /*
@@ -49,12 +50,14 @@ public class StockMarketHistoryServiceImpl implements StockMarketHistoryService 
     }
 
     @Override
-    public List<PercentageChangeResponseDto> getTopGainers() {
-        return stockMarketHistoryMapper.getTopChanges(true);
+    public List<PercentageChangeResponseDto> getTopGainers(int days) {
+        List<PercentageChangeResponseDto> result = stockMarketHistoryMapper.getTopChanges(days, true);
+        result.sort(Comparator.comparing(PercentageChangeResponseDto::getTotalPercentageChange).reversed());
+        return result;
     }
 
     @Override
-    public List<PercentageChangeResponseDto> getTopLosers() {
-        return stockMarketHistoryMapper.getTopChanges(false);
+    public List<PercentageChangeResponseDto> getTopLosers(int days) {
+        return stockMarketHistoryMapper.getTopChanges(days, false);
     }
 }

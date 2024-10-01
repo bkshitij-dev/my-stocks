@@ -19,7 +19,7 @@ public interface StockMarketHistoryService {
 
     List<RecentMarketDataResponseDto> getRecentData();
 
-    List<PercentageChangeResponseDto> getTopGainers();
+    List<PercentageChangeResponseDto> getTopGainers(int days);
 
-    List<PercentageChangeResponseDto> getTopLosers();
+    List<PercentageChangeResponseDto> getTopLosers(int days);
 }

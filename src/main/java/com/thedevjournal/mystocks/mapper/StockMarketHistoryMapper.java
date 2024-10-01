@@ -23,6 +23,6 @@ public interface StockMarketHistoryMapper {
 
     List<RecentMarketDataResponseDto> getRecentData();
 
-    List<PercentageChangeResponseDto> getTopChanges(@Param("gainers") boolean gainers);
+    List<PercentageChangeResponseDto> getTopChanges(@Param("days") int days, @Param("gainers") boolean gainers);
 
 }
