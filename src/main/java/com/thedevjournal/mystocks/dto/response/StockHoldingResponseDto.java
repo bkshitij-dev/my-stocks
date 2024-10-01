@@ -23,4 +23,5 @@ public class StockHoldingResponseDto {
     private BigDecimal currentInvestment;
     private BigDecimal currentValue;
     private BigDecimal wacc;
+    private BigDecimal ltp;
 }

@@ -14,7 +14,8 @@
         CASE WHEN sh.holding_quantity = 0 THEN 0
             WHEN sh.total_sell_amount - sh.total_buy_amount > 0 THEN 0
             ELSE sh.wacc END AS wacc,
-        shi.ltp * sh.holding_quantity as currentValue
+        shi.ltp * sh.holding_quantity as currentValue,
+        shi.ltp as ltp
         FROM stock_holdings sh
         INNER JOIN companies c on sh.company_id = c.id
         INNER JOIN stock_history shi on shi.company_id = sh.company_id
