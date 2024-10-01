@@ -22,7 +22,7 @@ public class QuartzConfig {
         return TriggerBuilder.newTrigger()
                 .forJob(jobDetail)
                 .withIdentity("onMarketTrigger")
-                .withSchedule(CronScheduleBuilder.cronSchedule("0 0-59 11-14 ? * 7,1,2,3,4"))
+                .withSchedule(CronScheduleBuilder.cronSchedule("0 0-59 11-14 ? * 1,2,3,4,5"))
                 .build();
     }
 
@@ -33,7 +33,7 @@ public class QuartzConfig {
         return TriggerBuilder.newTrigger()
                 .forJob(jobDetail)
                 .withIdentity("offMarketTrigger")
-                .withSchedule(CronScheduleBuilder.cronSchedule("0 0-5 15 ? * 7,1,2,3,4"))
+                .withSchedule(CronScheduleBuilder.cronSchedule("0 0-5 15 ? * 1,2,3,4,5"))
                 .build();
     }
 }
