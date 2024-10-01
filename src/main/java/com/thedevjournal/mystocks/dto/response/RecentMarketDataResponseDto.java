@@ -15,5 +15,4 @@ public class RecentMarketDataResponseDto {
 
     private String date;
     private BigDecimal index;
-    private BigDecimal pointsChange;
 }

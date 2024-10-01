@@ -6,16 +6,14 @@ package com.thedevjournal.mystocks.mapper;
  */
 
 import com.thedevjournal.mystocks.dto.request.StockHistoryRequestDto;
-import com.thedevjournal.mystocks.dto.response.RecentMarketDataResponseDto;
+import com.thedevjournal.mystocks.dto.response.RecentStockDataResponseDo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 @Mapper
 public interface StockHistoryMapper {
 
     void updateLiveData(@Param("request") StockHistoryRequestDto request, @Param("companyId") Long companyId);
 
-    List<RecentMarketDataResponseDto> getRecentData(@Param("scrip") String scrip);
+    RecentStockDataResponseDo getRecentData(@Param("scrip") String scrip);
 }

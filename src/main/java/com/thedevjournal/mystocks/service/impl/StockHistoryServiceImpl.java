@@ -2,7 +2,7 @@ package com.thedevjournal.mystocks.service.impl;
 
 import com.thedevjournal.mystocks.dto.request.StockHistoryRequestDto;
 import com.thedevjournal.mystocks.dto.request.StockMarketHistoryRequestDto;
-import com.thedevjournal.mystocks.dto.response.RecentMarketDataResponseDto;
+import com.thedevjournal.mystocks.dto.response.RecentStockDataResponseDo;
 import com.thedevjournal.mystocks.mapper.StockHistoryMapper;
 import com.thedevjournal.mystocks.model.Company;
 import com.thedevjournal.mystocks.service.CompanyService;
@@ -102,9 +102,9 @@ public class StockHistoryServiceImpl implements StockHistoryService {
     }
 
     @Override
-    public List<RecentMarketDataResponseDto> getRecentData(String scrip) {
-        List<RecentMarketDataResponseDto> recentData = stockHistoryMapper.getRecentData(scrip);
-        Collections.reverse(recentData);
-        return recentData;
+    public RecentStockDataResponseDo getRecentData(String scrip) {
+        RecentStockDataResponseDo data = stockHistoryMapper.getRecentData(scrip);
+        Collections.reverse(data.getRecentData());
+        return data;
     }
 }

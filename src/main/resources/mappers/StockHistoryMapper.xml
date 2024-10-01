@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thedevjournal.mystocks.mapper.StockHistoryMapper">
+
+    <resultMap id="recentDataResponse"
+               type="com.thedevjournal.mystocks.dto.response.RecentStockDataResponseDo">
+        <result property="name" column="name"/>
+        <result property="scrip" column="scrip"/>
+        <collection property="recentData" javaType="List" columnPrefix="rd_"
+                    ofType="com.thedevjournal.mystocks.dto.response.RecentMarketDataResponseDto">
+            <result property="date" column="date"/>
+            <result property="index" column="index"/>
+        </collection>
+    </resultMap>
+
     <insert id="updateLiveData" parameterType="com.thedevjournal.mystocks.dto.request.StockHistoryRequestDto">
         INSERT INTO stock_history (id, company_id, ltp, points_change, percentage_change, open, high, low, volume, stock_market_history_id)
         VALUES (nextval('stock_history_seq'), #{companyId}, #{request.ltp}, #{request.pointsChange}, #{request.percentageChange},
@@ -16,16 +28,17 @@
         volume = EXCLUDED.volume
     </insert>
 
-    <select id="getRecentData" resultType="com.thedevjournal.mystocks.dto.response.RecentMarketDataResponseDto">
+    <select id="getRecentData" resultMap="recentDataResponse">
         SELECT
-            to_char(smh.date, 'Mon DD') as date,
-            sh.ltp as index,
-            sh.points_change as pointsChange
+            c.name as name,
+            c.scrip as scrip,
+            to_char(smh.date, 'Mon DD') as rd_date,
+            sh.ltp as rd_index
         FROM stock_history sh
         INNER JOIN stock_market_history smh ON sh.stock_market_history_id = smh.id
         INNER JOIN companies c ON sh.company_id = c.id
         WHERE c.scrip = #{scrip}
         ORDER BY date DESC
-        LIMIT 26;
+        LIMIT 60;
     </select>
 </mapper>
