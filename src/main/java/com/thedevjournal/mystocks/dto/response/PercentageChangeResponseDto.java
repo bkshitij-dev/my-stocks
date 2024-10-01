@@ -16,4 +16,5 @@ public class PercentageChangeResponseDto {
     private String scrip;
     private BigDecimal totalPercentageChange;
     private BigDecimal latestPercentageChange;
+    private BigDecimal ltp;
 }
