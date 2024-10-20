@@ -9,7 +9,6 @@ import com.thedevjournal.mystocks.service.StockTransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -19,7 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/stock-transactions")
 @RequiredArgsConstructor
-@PreAuthorize(("hasRole('USER')"))
 public class StockTransactionController extends BaseController {
 
     private final StockTransactionService stockTransactionService;

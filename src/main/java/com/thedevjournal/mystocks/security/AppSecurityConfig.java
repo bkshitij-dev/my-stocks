@@ -26,10 +26,10 @@ public class AppSecurityConfig {
     private JwtAuthenticationEntryPoint authenticationEntryPoint;
     private JwtAuthenticationFilter authenticationFilter;
 
-    private final String[] WHITE_LIST_APIS = new String[] {
-            "/api/v1/auth/**",
-            "/api/v1/stock-market-history/current-data"
-    };
+//    private final String[] WHITE_LIST_APIS = new String[] {
+//            "/api/v1/auth/**",
+//            "/api/v1/stock-market-history/current-data"
+//    };
 
     @Bean
     public PasswordEncoder bCryptpasswordEncoder(){
@@ -41,8 +41,8 @@ public class AppSecurityConfig {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req
-                                .requestMatchers(WHITE_LIST_APIS).permitAll()
-                                .anyRequest().authenticated())
+//                                .requestMatchers(WHITE_LIST_APIS).permitAll()
+                                .anyRequest().permitAll())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPoint))

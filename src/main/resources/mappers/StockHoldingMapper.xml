@@ -18,8 +18,8 @@
         shi.ltp as ltp
         FROM stock_holdings sh
         INNER JOIN companies c on sh.company_id = c.id
-        INNER JOIN stock_history shi on shi.company_id = sh.company_id
-        INNER JOIN stock_market_history smh on shi.stock_market_history_id = smh.id
+        LEFT JOIN stock_history shi on shi.company_id = sh.company_id
+        LEFT JOIN stock_market_history smh on shi.stock_market_history_id = smh.id
         WHERE smh.date = (SELECT max(smh1.date) FROM stock_market_history smh1)
         ORDER BY c.scrip;
     </select>

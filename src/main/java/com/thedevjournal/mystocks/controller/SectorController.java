@@ -12,7 +12,6 @@ import com.thedevjournal.mystocks.service.SectorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,7 +22,6 @@ public class SectorController extends BaseController {
     private final SectorService sectorService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse> create(@RequestBody SectorRequestDto request) {
         sectorService.create(request);
         return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_SAVE), HttpStatus.OK);
@@ -42,7 +40,6 @@ public class SectorController extends BaseController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse> update(@PathVariable("id") Long id, @RequestBody SectorRequestDto request) {
         sectorService.update(id, request);
         return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_UPDATE), HttpStatus.OK);

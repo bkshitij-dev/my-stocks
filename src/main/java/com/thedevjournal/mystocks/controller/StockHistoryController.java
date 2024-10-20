@@ -34,4 +34,16 @@ public class StockHistoryController extends BaseController {
         return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE,
                 stockHistoryService.getRecentData(scrip)), HttpStatus.OK);
     }
+
+    @GetMapping("/mfi")
+    public ResponseEntity<ApiResponse> getMFI() {
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE,
+                stockHistoryService.getMFI()), HttpStatus.OK);
+    }
+
+    @GetMapping("/rsi")
+    public ResponseEntity<ApiResponse> getRSI() {
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE,
+                stockHistoryService.getRSI()), HttpStatus.OK);
+    }
 }

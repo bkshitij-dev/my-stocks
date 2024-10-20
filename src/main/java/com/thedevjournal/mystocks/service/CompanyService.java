@@ -12,6 +12,8 @@ public interface CompanyService {
 
     List<CompanyResponseDto> list();
 
+    List<Company> listMajor();
+
     Company get(Long id) throws Exception;
 
     Company findByScrip(String scrip) throws Exception;

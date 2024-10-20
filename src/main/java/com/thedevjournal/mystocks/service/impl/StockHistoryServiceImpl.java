@@ -2,7 +2,7 @@ package com.thedevjournal.mystocks.service.impl;
 
 import com.thedevjournal.mystocks.dto.request.StockHistoryRequestDto;
 import com.thedevjournal.mystocks.dto.request.StockMarketHistoryRequestDto;
-import com.thedevjournal.mystocks.dto.response.RecentStockDataResponseDo;
+import com.thedevjournal.mystocks.dto.response.*;
 import com.thedevjournal.mystocks.mapper.StockHistoryMapper;
 import com.thedevjournal.mystocks.model.Company;
 import com.thedevjournal.mystocks.service.CompanyService;
@@ -19,9 +19,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.math.RoundingMode;
+import java.util.*;
 
 /*
  * @author Kshitij
@@ -37,6 +36,7 @@ public class StockHistoryServiceImpl implements StockHistoryService {
     private final StockHistoryMapper stockHistoryMapper;
 
     private static final Logger logger = LoggerFactory.getLogger(StockHistoryServiceImpl.class);
+    private static final Integer PERIOD = 14;
 
     @Override
     @Transactional
@@ -106,5 +106,80 @@ public class StockHistoryServiceImpl implements StockHistoryService {
         RecentStockDataResponseDo data = stockHistoryMapper.getRecentData(scrip);
         Collections.reverse(data.getRecentData());
         return data;
+    }
+
+    @Override
+    public List<StockMFIResponseDto> getMFI() {
+        List<StockMFIResponseDto> mfis = new ArrayList<>();
+        List<Company> companies = companyService.listMajor();
+        companies.forEach(c -> {
+            List<StockMFIParamsResponseDto> data = stockHistoryMapper.getMFI(c.getScrip());
+            BigDecimal positiveMoneyFlow = BigDecimal.ZERO;
+            BigDecimal negativeMoneyFlow = BigDecimal.ZERO;
+            for (int i=0; i<data.size()-1; i++) {
+                StockMFIParamsResponseDto datum = data.get(i);
+                if (datum.getTypicalPrice().compareTo(data.get(i+1).getTypicalPrice()) > 0) {
+                    positiveMoneyFlow = positiveMoneyFlow.add(datum.getTypicalPrice().multiply(datum.getVolume()));
+                } else {
+                    negativeMoneyFlow = negativeMoneyFlow.add(datum.getTypicalPrice().multiply(datum.getVolume()));
+                }
+            }
+            if (negativeMoneyFlow.compareTo(BigDecimal.ZERO) == 0) {
+                mfis.add(StockMFIResponseDto.builder()
+                        .scrip(c.getScrip())
+                        .mfi(new BigDecimal(100))
+                        .build());
+            } else {
+                BigDecimal moneyFlowRatio = positiveMoneyFlow.divide(negativeMoneyFlow.abs(), 2,
+                        RoundingMode.HALF_UP);
+                mfis.add(StockMFIResponseDto.builder()
+                        .scrip(c.getScrip())
+                        .mfi(new BigDecimal(100)
+                                .subtract(new BigDecimal(100)
+                                        .divide(BigDecimal.ONE.add(moneyFlowRatio), 2, RoundingMode.HALF_UP)))
+                        .build());
+            }
+        });
+        mfis.sort(Comparator.comparing(StockMFIResponseDto::getMfi).reversed());
+        return mfis;
+    }
+
+    @Override
+    public List<StockRSIResponseDto> getRSI() {
+        List<StockRSIResponseDto> rsis = new ArrayList<>();
+        List<Company> companies = companyService.listMajor();
+        companies.forEach(c -> {
+            List<StockRSIParamsResponseDto> data = stockHistoryMapper.getRSI(c.getScrip());
+            if (data.size() < PERIOD) {
+                return;
+            }
+            BigDecimal gains = BigDecimal.ZERO;
+            BigDecimal losses = BigDecimal.ZERO;
+            for (StockRSIParamsResponseDto datum : data) {
+                if (datum.getPointsChange().compareTo(BigDecimal.ZERO) > 0) {
+                    gains = gains.add(datum.getPointsChange());
+                } else {
+                    losses = losses.add(datum.getPointsChange());
+                }
+            }
+            if (losses.compareTo(BigDecimal.ZERO) == 0) {
+                rsis.add(StockRSIResponseDto.builder()
+                        .scrip(c.getScrip())
+                        .rsi(new BigDecimal(100))
+                        .build());
+            } else {
+                BigDecimal averageGains = gains.divide(BigDecimal.valueOf(PERIOD), 2, RoundingMode.HALF_UP);
+                BigDecimal averageLosses = losses.divide(BigDecimal.valueOf(PERIOD), 2, RoundingMode.HALF_UP);
+                BigDecimal relativeStrength = averageGains.divide(averageLosses.abs(), 2, RoundingMode.HALF_UP);
+                rsis.add(StockRSIResponseDto.builder()
+                        .scrip(c.getScrip())
+                        .rsi(new BigDecimal(100)
+                                .subtract(new BigDecimal(100)
+                                        .divide(BigDecimal.ONE.add(relativeStrength), 2, RoundingMode.HALF_UP)))
+                        .build());
+            }
+        });
+        rsis.sort(Comparator.comparing(StockRSIResponseDto::getRsi).reversed());
+        return rsis;
     }
 }

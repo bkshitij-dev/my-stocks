@@ -41,4 +41,36 @@
         ORDER BY date DESC
         LIMIT 60;
     </select>
+
+    <select id="getMFI" resultType="com.thedevjournal.mystocks.dto.response.StockMFIParamsResponseDto">
+        SELECT
+            smh.date as date,
+            sh.high as high,
+            sh.low as low,
+            sh.ltp as close,
+            sh.volume as volume,
+            ROUND((sh.high + sh.low + sh.ltp)/3,2) as typicalPrice
+        FROM stock_history sh
+        INNER JOIN stock_market_history smh ON sh.stock_market_history_id = smh.id
+        INNER JOIN companies c ON sh.company_id = c.id
+        INNER JOIN sectors s ON c.sector_id = s.id
+        WHERE c.scrip = #{scrip} AND sh.volume IS NOT NULL
+        AND s.name NOT IN ('Mutual Fund', 'Corporate Debentures', 'Government Bonds', 'Capital')
+        ORDER BY date DESC
+        LIMIT 14;
+    </select>
+
+    <select id="getRSI" resultType="com.thedevjournal.mystocks.dto.response.StockRSIParamsResponseDto">
+        SELECT
+        smh.date as date,
+        sh.points_change as pointsChange
+        FROM stock_history sh
+        INNER JOIN stock_market_history smh ON sh.stock_market_history_id = smh.id
+        INNER JOIN companies c ON sh.company_id = c.id
+        INNER JOIN sectors s ON c.sector_id = s.id
+        WHERE c.scrip = #{scrip}
+        AND s.name NOT IN ('Mutual Fund', 'Corporate Debentures', 'Government Bonds', 'Capital')
+        ORDER BY date DESC
+        LIMIT 15;
+    </select>
 </mapper>

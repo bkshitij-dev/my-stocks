@@ -36,6 +36,11 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    public List<Company> listMajor() {
+        return companyRepository.listMajor();
+    }
+
+    @Override
     public Company get(Long id) throws Exception {
         return companyRepository.findById(id).orElseThrow(() -> new Exception("Cannot find company"));
     }

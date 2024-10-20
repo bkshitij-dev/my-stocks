@@ -1,6 +1,10 @@
 package com.thedevjournal.mystocks.service;
 
 import com.thedevjournal.mystocks.dto.response.RecentStockDataResponseDo;
+import com.thedevjournal.mystocks.dto.response.StockMFIResponseDto;
+import com.thedevjournal.mystocks.dto.response.StockRSIResponseDto;
+
+import java.util.List;
 
 /*
  * @author Kshitij
@@ -11,4 +15,8 @@ public interface StockHistoryService {
     void fetchLiveData() throws Exception;
 
     RecentStockDataResponseDo getRecentData(String scrip);
+
+    List<StockMFIResponseDto> getMFI();
+
+    List<StockRSIResponseDto> getRSI();
 }

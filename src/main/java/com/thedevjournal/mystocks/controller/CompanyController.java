@@ -11,7 +11,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -25,7 +24,6 @@ public class CompanyController extends BaseController {
     private final CompanyService companyService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse> create(@RequestBody CompanyRequestDto request) {
         companyService.create(request);
         return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_SAVE), HttpStatus.OK);
@@ -44,14 +42,12 @@ public class CompanyController extends BaseController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse> update(@PathVariable("id") Long id, @RequestBody CompanyRequestDto request) {
         companyService.update(id, request);
         return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_UPDATE), HttpStatus.OK);
     }
 
     @GetMapping("/fetch")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse> fetch() throws IOException {
         String url = "https://merolagani.com/CompanyList.aspx";
         Document document = Jsoup.connect(url).get();
