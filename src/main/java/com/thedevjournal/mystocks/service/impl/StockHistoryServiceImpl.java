@@ -182,4 +182,9 @@ public class StockHistoryServiceImpl implements StockHistoryService {
         rsis.sort(Comparator.comparing(StockRSIResponseDto::getRsi).reversed());
         return rsis;
     }
+
+    @Override
+    public List<StockHistoryResponseDto> getStocksInPriceRange(BigDecimal low, BigDecimal high) {
+        return stockHistoryMapper.getStocksInPriceRange(low, high);
+    }
 }

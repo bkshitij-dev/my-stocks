@@ -7,11 +7,13 @@ package com.thedevjournal.mystocks.mapper;
 
 import com.thedevjournal.mystocks.dto.request.StockHistoryRequestDto;
 import com.thedevjournal.mystocks.dto.response.RecentStockDataResponseDo;
+import com.thedevjournal.mystocks.dto.response.StockHistoryResponseDto;
 import com.thedevjournal.mystocks.dto.response.StockMFIParamsResponseDto;
 import com.thedevjournal.mystocks.dto.response.StockRSIParamsResponseDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Mapper
@@ -24,4 +26,6 @@ public interface StockHistoryMapper {
     List<StockMFIParamsResponseDto> getMFI(@Param("scrip") String scrip);
 
     List<StockRSIParamsResponseDto> getRSI(@Param("scrip") String scrip);
+
+    List<StockHistoryResponseDto> getStocksInPriceRange(@Param("low") BigDecimal low, @Param("high") BigDecimal high);
 }

@@ -73,4 +73,24 @@
         ORDER BY date DESC
         LIMIT 15;
     </select>
+
+    <select id="getStocksInPriceRange" resultType="com.thedevjournal.mystocks.dto.response.StockHistoryResponseDto">
+        SELECT
+            c.scrip as scrip,
+            sh.ltp as ltp,
+            sh.points_change as pointsChange,
+            sh.percentage_change as percentageChange,
+            sh.open as open,
+            sh.high as high,
+            sh.low as low
+        FROM stock_history sh
+        INNER JOIN companies c ON sh.company_id = c.id
+        INNER JOIN stock_market_history smh ON sh.stock_market_history_id = smh.id
+        WHERE smh.date = (
+            SELECT max(date) FROM
+            stock_market_history
+        )
+        AND sh.ltp BETWEEN #{low} AND #{high}
+        ORDER BY sh.ltp;
+    </select>
 </mapper>

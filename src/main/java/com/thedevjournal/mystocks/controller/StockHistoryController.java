@@ -11,10 +11,9 @@ import com.thedevjournal.mystocks.service.StockHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/v1/stock-history")
@@ -45,5 +44,12 @@ public class StockHistoryController extends BaseController {
     public ResponseEntity<ApiResponse> getRSI() {
         return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE,
                 stockHistoryService.getRSI()), HttpStatus.OK);
+    }
+
+    @GetMapping("/in-price-range")
+    public ResponseEntity<ApiResponse> getStocksInPriceRange(@RequestParam("low") BigDecimal low,
+                                                             @RequestParam("high") BigDecimal high) {
+        return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE,
+                stockHistoryService.getStocksInPriceRange(low, high)), HttpStatus.OK);
     }
 }
