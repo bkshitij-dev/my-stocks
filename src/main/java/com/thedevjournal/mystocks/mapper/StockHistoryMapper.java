@@ -27,5 +27,6 @@ public interface StockHistoryMapper {
 
     List<StockRSIParamsResponseDto> getRSI(@Param("scrip") String scrip);
 
-    List<StockHistoryResponseDto> getStocksInPriceRange(@Param("low") BigDecimal low, @Param("high") BigDecimal high);
+    List<StockHistoryResponseDto> getStocksInPriceRange(@Param("low") BigDecimal low, @Param("high") BigDecimal high,
+                                                        @Param("sector") String sector);
 }

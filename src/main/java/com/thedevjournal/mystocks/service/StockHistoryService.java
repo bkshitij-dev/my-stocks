@@ -22,5 +22,5 @@ public interface StockHistoryService {
 
     List<StockRSIResponseDto> getRSI();
 
-    List<StockHistoryResponseDto> getStocksInPriceRange(BigDecimal low, BigDecimal high);
+    List<StockHistoryResponseDto> getStocksInPriceRange(BigDecimal low, BigDecimal high, String sector);
 }

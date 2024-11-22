@@ -85,12 +85,18 @@
             sh.low as low
         FROM stock_history sh
         INNER JOIN companies c ON sh.company_id = c.id
+        <if test="sector!=null">
+            INNER JOIN sectors s ON c.sector_id = s.id
+        </if>
         INNER JOIN stock_market_history smh ON sh.stock_market_history_id = smh.id
         WHERE smh.date = (
             SELECT max(date) FROM
             stock_market_history
         )
         AND sh.ltp BETWEEN #{low} AND #{high}
+        <if test="sector!=null">
+            AND s.name = #{sector}
+        </if>
         ORDER BY sh.ltp;
     </select>
 </mapper>

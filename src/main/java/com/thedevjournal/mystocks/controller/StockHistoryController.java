@@ -48,8 +48,9 @@ public class StockHistoryController extends BaseController {
 
     @GetMapping("/in-price-range")
     public ResponseEntity<ApiResponse> getStocksInPriceRange(@RequestParam("low") BigDecimal low,
-                                                             @RequestParam("high") BigDecimal high) {
+                                                             @RequestParam("high") BigDecimal high,
+                                                     @RequestParam(name = "sector", required = false) String sector) {
         return new ResponseEntity<>(successResponse(AppConstants.SUCCESS_RETRIEVE,
-                stockHistoryService.getStocksInPriceRange(low, high)), HttpStatus.OK);
+                stockHistoryService.getStocksInPriceRange(low, high, sector)), HttpStatus.OK);
     }
 }

@@ -184,7 +184,7 @@ public class StockHistoryServiceImpl implements StockHistoryService {
     }
 
     @Override
-    public List<StockHistoryResponseDto> getStocksInPriceRange(BigDecimal low, BigDecimal high) {
-        return stockHistoryMapper.getStocksInPriceRange(low, high);
+    public List<StockHistoryResponseDto> getStocksInPriceRange(BigDecimal low, BigDecimal high, String sector) {
+        return stockHistoryMapper.getStocksInPriceRange(low, high, sector);
     }
 }
