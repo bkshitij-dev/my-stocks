@@ -12,8 +12,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StockRSIResponseDto {
+public class StockIndicatorResponseDto {
 
     private String scrip;
-    private BigDecimal rsi;
+    private BigDecimal value;
 }

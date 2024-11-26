@@ -109,8 +109,8 @@ public class StockHistoryServiceImpl implements StockHistoryService {
     }
 
     @Override
-    public List<StockMFIResponseDto> getMFI() {
-        List<StockMFIResponseDto> mfis = new ArrayList<>();
+    public List<StockIndicatorResponseDto> getMFI() {
+        List<StockIndicatorResponseDto> mfis = new ArrayList<>();
         List<Company> companies = companyService.listMajor();
         companies.forEach(c -> {
             List<StockMFIParamsResponseDto> data = stockHistoryMapper.getMFI(c.getScrip());
@@ -125,28 +125,28 @@ public class StockHistoryServiceImpl implements StockHistoryService {
                 }
             }
             if (negativeMoneyFlow.compareTo(BigDecimal.ZERO) == 0) {
-                mfis.add(StockMFIResponseDto.builder()
+                mfis.add(StockIndicatorResponseDto.builder()
                         .scrip(c.getScrip())
-                        .mfi(new BigDecimal(100))
+                        .value(new BigDecimal(100))
                         .build());
             } else {
                 BigDecimal moneyFlowRatio = positiveMoneyFlow.divide(negativeMoneyFlow.abs(), 2,
                         RoundingMode.HALF_UP);
-                mfis.add(StockMFIResponseDto.builder()
+                mfis.add(StockIndicatorResponseDto.builder()
                         .scrip(c.getScrip())
-                        .mfi(new BigDecimal(100)
+                        .value(new BigDecimal(100)
                                 .subtract(new BigDecimal(100)
                                         .divide(BigDecimal.ONE.add(moneyFlowRatio), 2, RoundingMode.HALF_UP)))
                         .build());
             }
         });
-        mfis.sort(Comparator.comparing(StockMFIResponseDto::getMfi).reversed());
+        mfis.sort(Comparator.comparing(StockIndicatorResponseDto::getValue).reversed());
         return mfis;
     }
 
     @Override
-    public List<StockRSIResponseDto> getRSI() {
-        List<StockRSIResponseDto> rsis = new ArrayList<>();
+    public List<StockIndicatorResponseDto> getRSI() {
+        List<StockIndicatorResponseDto> rsis = new ArrayList<>();
         List<Company> companies = companyService.listMajor();
         companies.forEach(c -> {
             List<StockRSIParamsResponseDto> data = stockHistoryMapper.getRSI(c.getScrip());
@@ -163,23 +163,23 @@ public class StockHistoryServiceImpl implements StockHistoryService {
                 }
             }
             if (losses.compareTo(BigDecimal.ZERO) == 0) {
-                rsis.add(StockRSIResponseDto.builder()
+                rsis.add(StockIndicatorResponseDto.builder()
                         .scrip(c.getScrip())
-                        .rsi(new BigDecimal(100))
+                        .value(new BigDecimal(100))
                         .build());
             } else {
                 BigDecimal averageGains = gains.divide(BigDecimal.valueOf(PERIOD), 2, RoundingMode.HALF_UP);
                 BigDecimal averageLosses = losses.divide(BigDecimal.valueOf(PERIOD), 2, RoundingMode.HALF_UP);
                 BigDecimal relativeStrength = averageGains.divide(averageLosses.abs(), 2, RoundingMode.HALF_UP);
-                rsis.add(StockRSIResponseDto.builder()
+                rsis.add(StockIndicatorResponseDto.builder()
                         .scrip(c.getScrip())
-                        .rsi(new BigDecimal(100)
+                        .value(new BigDecimal(100)
                                 .subtract(new BigDecimal(100)
                                         .divide(BigDecimal.ONE.add(relativeStrength), 2, RoundingMode.HALF_UP)))
                         .build());
             }
         });
-        rsis.sort(Comparator.comparing(StockRSIResponseDto::getRsi).reversed());
+        rsis.sort(Comparator.comparing(StockIndicatorResponseDto::getValue).reversed());
         return rsis;
     }
 

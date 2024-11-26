@@ -2,8 +2,7 @@ package com.thedevjournal.mystocks.service;
 
 import com.thedevjournal.mystocks.dto.response.RecentStockDataResponseDo;
 import com.thedevjournal.mystocks.dto.response.StockHistoryResponseDto;
-import com.thedevjournal.mystocks.dto.response.StockMFIResponseDto;
-import com.thedevjournal.mystocks.dto.response.StockRSIResponseDto;
+import com.thedevjournal.mystocks.dto.response.StockIndicatorResponseDto;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,9 +17,9 @@ public interface StockHistoryService {
 
     RecentStockDataResponseDo getRecentData(String scrip);
 
-    List<StockMFIResponseDto> getMFI();
+    List<StockIndicatorResponseDto> getMFI();
 
-    List<StockRSIResponseDto> getRSI();
+    List<StockIndicatorResponseDto> getRSI();
 
     List<StockHistoryResponseDto> getStocksInPriceRange(BigDecimal low, BigDecimal high, String sector);
 }
